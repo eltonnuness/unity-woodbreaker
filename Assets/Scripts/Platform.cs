@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Plataform : MonoBehaviour
+public class Platform : MonoBehaviour
 {
     public float speed;
     public float limitX;
