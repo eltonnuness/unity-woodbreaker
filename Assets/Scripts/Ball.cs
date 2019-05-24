@@ -38,6 +38,11 @@ public class Ball : MonoBehaviour
                 invalidCollision = true;
             }
         }
+        else //block collision
+        {
+            invalidCollision = false;
+            Destroy(collision.gameObject);
+        }
         if (!invalidCollision)
         {
             Debug.Log($"apple object normal: {normal}");
