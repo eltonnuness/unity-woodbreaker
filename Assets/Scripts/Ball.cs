@@ -8,18 +8,38 @@ public class Ball : MonoBehaviour
     public float velocity;
     public GameObject blockParticle;
     public GameObject leafParticle;
+    public LineRenderer lineHelper;
+    public int lineHelperMaxPoints = 3;
 
     // Start is called before the first frame update
     void Start()
     {
         direction.Normalize(); //equals direction = direction.normalized;
-
+        lineHelper.positionCount = lineHelperMaxPoints;
     }
 
     // Update is called once per frame
     void Update()
     {
         transform.position += direction * velocity * Time.deltaTime;
+        UpdateLineRenderer();
+    }
+
+    void UpdateLineRenderer()
+    {
+        int currentPoint = 1;
+        Vector3 currentDirection = direction;
+        Vector3 lastPosition = transform.position;
+        lineHelper.SetPosition(0, lastPosition);
+        while (currentPoint < lineHelperMaxPoints)
+        {
+            RaycastHit2D hit = Physics2D.Raycast(lastPosition, currentDirection);
+            lastPosition = hit.point;
+            lineHelper.SetPosition(currentPoint, lastPosition);
+            currentDirection = Vector3.Reflect(currentDirection, hit.normal);
+            lastPosition += currentDirection * 0.05F;
+            currentPoint++;
+        }
     }
 
     void OnCollisionEnter2D (Collision2D collision)
