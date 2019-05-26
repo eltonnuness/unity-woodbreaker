@@ -6,11 +6,14 @@ public class Ball : MonoBehaviour
 {
     public Vector3 direction;
     public float velocity;
+    public GameObject blockParticle;
+    public GameObject leafParticle;
 
     // Start is called before the first frame update
     void Start()
     {
         direction.Normalize(); //equals direction = direction.normalized;
+
     }
 
     // Update is called once per frame
@@ -30,6 +33,11 @@ public class Ball : MonoBehaviour
             if (normal != Vector2.up)
             {
                 invalidCollision = true;
+            }else
+            {
+                GameObject particles = (GameObject)Instantiate(leafParticle, new Vector3(transform.position.x, transform.position.y - 1.1f, transform.position.z) , Quaternion.identity);
+                ParticleSystem particleComponent = particles.GetComponent<ParticleSystem>();
+                Destroy(particles, particleComponent.main.duration + particleComponent.main.startLifetimeMultiplier);
             }
         } else if (edgeGen != null)
         {
@@ -41,7 +49,13 @@ public class Ball : MonoBehaviour
         else //block collision
         {
             invalidCollision = false;
+            Bounds colliderBounds = collision.transform.GetComponent<SpriteRenderer>().bounds;
+            Vector3 newPosition = new Vector3(collision.transform.position.x + colliderBounds.extents.x, collision.transform.position.y - colliderBounds.extents.y, collision.transform.position.z);
+            GameObject particles = (GameObject)Instantiate(blockParticle, newPosition, Quaternion.identity);
+            ParticleSystem particleComponent = particles.GetComponent<ParticleSystem>();
+            Destroy(particles, particleComponent.main.duration + particleComponent.main.startLifetimeMultiplier);
             Destroy(collision.gameObject);
+            GameController.totalDestroyedBlocks++;
         }
         if (!invalidCollision)
         {
@@ -53,7 +67,7 @@ public class Ball : MonoBehaviour
         }
         else
         {
-            GameController.GameOver();
+            GameController.instance.GameOver();
         }
     }
 

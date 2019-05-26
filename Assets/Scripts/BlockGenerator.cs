@@ -21,6 +21,7 @@ public class BlockGenerator : MonoBehaviour
         float screenWidth, screenHeigth, widthMultiplier;
         int columns;
         CollectInfoBlock(blockWidth, out screenWidth, out screenHeigth, out columns, out widthMultiplier);
+        GameController.totalBlocks = lines * columns;
         for (int i = 0; i < lines; i++)
         {
             for (int j = 0; j < columns; j++)
